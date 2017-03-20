@@ -9,10 +9,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Spinner;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-
+    private Spinner spinner;
     private static final int APP_BAR_ALPHA = 80;
 
     @Override
@@ -25,7 +29,12 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.getBackground().setAlpha(APP_BAR_ALPHA);
         setSupportActionBar(toolbar);
+
+        spinner = (Spinner) findViewById(R.id.spinner);
+
+
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -47,4 +56,11 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+    //TODO: Create permission requesting method
+    //TODO: Setup threading JSON download
+    //TODO: parse JSON
+    //TODO: Do stuff with the parsed info (background, etc)
+
 }
