@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="websites">websites
+        <item>CNU - Defender</item>
+        <item>Pair - Teton Software - Pets</item>
+    </string-array>
+    <string-array name="URLs">URLs
+        <item>http://www.pcs.cnu.edu/~kperkins/pets/</item>
+        <item>http://www.tetonsoftware.com/pets/</item>
+    </string-array>
+</resources>

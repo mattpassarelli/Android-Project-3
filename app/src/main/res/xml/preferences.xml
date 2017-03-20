@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <ListPreference
+        android:key="gender_preference"
+        android:title="@string/info"
+        android:summary="@string/info_Descrip"
+        android:entries="@array/websites"
+        android:entryValues="@array/URLs"/>
+
+</PreferenceScreen>

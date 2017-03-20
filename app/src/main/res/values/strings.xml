@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">"Project 3 "</string>
     <string name="action_settings">Settings</string>
+    <string name="settings">Settings</string>
+    <string name="info">Info</string>
+    <string name="info_Descrip">Select which site to get JSON data from</string>
 </resources>
