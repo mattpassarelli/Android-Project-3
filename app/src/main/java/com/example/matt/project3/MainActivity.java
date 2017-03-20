@@ -32,6 +32,14 @@ public class MainActivity extends AppCompatActivity {
 
         spinner = (Spinner) findViewById(R.id.spinner);
 
+        //for when the internet connects
+        //spinner.setEnabled(true);
+        //spinner.setVisibility(View.VISIBLE);
+
+        //for when internet doesn't connect
+        //spinner.setEnabled(false);
+        //spinner.setVisibility(View.INVISIBLE);
+
 
     }
 
@@ -58,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    //TODO: Method for checking network connectivity
     //TODO: Create permission requesting method
     //TODO: Setup threading JSON download
     //TODO: parse JSON
