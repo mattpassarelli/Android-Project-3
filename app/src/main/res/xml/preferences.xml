@@ -3,7 +3,7 @@
 
 
     <ListPreference
-        android:key="gender_preference"
+        android:key="url"
         android:title="@string/info"
         android:summary="@string/info_Descrip"
         android:entries="@array/websites"

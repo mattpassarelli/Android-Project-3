@@ -4,4 +4,6 @@
     <string name="settings">Settings</string>
     <string name="info">Info</string>
     <string name="info_Descrip">Select which site to get JSON data from</string>
+    <string name="error">Error</string>
+    <string name="network_unavailable">Network is unavailable. Please try again later</string>
 </resources>
