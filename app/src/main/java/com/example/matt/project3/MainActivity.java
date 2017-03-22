@@ -1,29 +1,18 @@
 package com.example.matt.project3;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.URLUtil;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -57,22 +46,24 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        new DownloadJSON(MainActivity.this).execute(url.toString());
 
         listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-                //TODO write URL checker
-                if(checkConnections())
-                {
-                    DownloadJSON download = new DownloadJSON();
 
-                    download.execute(url.toString());
+                if (checkConnections())
+                {
+                    new DownloadJSON(MainActivity.this).execute(url.toString());
+
+                    //Toast.makeText(MainActivity.this, "doing stuff", Toast.LENGTH_SHORT).show();
                 }
+
             }
         };
 
         prefs.registerOnSharedPreferenceChangeListener(listener);
 
-        Toast.makeText(this, url.toString(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, url.toString(), Toast.LENGTH_SHORT).show();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.getBackground().setAlpha(APP_BAR_ALPHA);
@@ -96,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.network_unavailable, Toast.LENGTH_SHORT).show();
             return true;
         }
-        return false;
+        return true;
     }
 
 
