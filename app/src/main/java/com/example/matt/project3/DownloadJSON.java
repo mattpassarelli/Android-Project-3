@@ -31,7 +31,7 @@ class DownloadJSON extends AsyncTask<String, String, String> {
             android.os.Debug.waitForDebugger();
 
         try {
-            URL url = new URL(params[0]);
+            URL url = new URL(params[0] + "/pets.json");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
             connection.setRequestMethod("GET");
@@ -65,11 +65,11 @@ class DownloadJSON extends AsyncTask<String, String, String> {
         super.onPostExecute(result);
         if(connectionCode == 404)
         {
-            Toast.makeText(context, "fuck you", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Error when connecting to: " + "\n" + "http://www.pcs.cnu.edu/~kperkins/pets/pets.json" + "\n" + "Error was " + connectionCode, Toast.LENGTH_SHORT).show();
         }
         else
         {
-            Toast.makeText(context, "yay", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "" + urlStr + " yay", Toast.LENGTH_SHORT).show();
         }
     }
 }

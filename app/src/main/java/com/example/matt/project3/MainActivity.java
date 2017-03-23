@@ -12,6 +12,7 @@ import android.webkit.URLUtil;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,9 +40,15 @@ public class MainActivity extends AppCompatActivity {
 
         spinner = (Spinner) findViewById(R.id.spinner);
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String temp = prefs.getString("url", null);
 
         try {
-            url = new URL(prefs.getString("url", getString(R.string.error)));
+            if(temp != null) {
+                url = new URL(prefs.getString("url", getString(R.string.error)));
+            }else
+            {
+                url = new URL("http://www.tetonsoftware.com/pets/");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -53,7 +60,13 @@ public class MainActivity extends AppCompatActivity {
 
                 if (checkConnections())
                 {
-                    new DownloadJSON(MainActivity.this).execute(url.toString());
+                    try {
+                        url = new URL(prefs.getString("url", getString(R.string.error)));
+                        new DownloadJSON(MainActivity.this).execute(url.toString());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
 
                     //Toast.makeText(MainActivity.this, "doing stuff", Toast.LENGTH_SHORT).show();
                 }
