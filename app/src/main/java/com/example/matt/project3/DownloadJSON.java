@@ -17,18 +17,19 @@ import java.util.ArrayList;
 class DownloadJSON extends AsyncTask<String, String, String> {
     private String urlStr;
     private Context context;
-    String line;
-    int connectionCode;
+    private String line;
+    private int connectionCode;
+    private MainActivity main;
 
 
-    DownloadJSON(Context context) {
+    DownloadJSON(Context context, MainActivity main) {
         this.context = context;
+        attach(main);
     }
 
     @Override
     protected String doInBackground(String... params) {
-        if (android.os.Debug.isDebuggerConnected())
-            android.os.Debug.waitForDebugger();
+
 
         try {
             URL url = new URL(params[0] + "/pets.json");
@@ -63,13 +64,27 @@ class DownloadJSON extends AsyncTask<String, String, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
+        if(main != null)
+        {
+            //main.printTestToast();
+            main.parseJSON(result);
+        }
+
         if(connectionCode == 404)
         {
-            Toast.makeText(context, "Error when connecting to: " + "\n" + "http://www.pcs.cnu.edu/~kperkins/pets/pets.json" + "\n" + "Error was " + connectionCode, Toast.LENGTH_SHORT).show();
+            main.couldNotConnect(connectionCode);
         }
         else
         {
-            Toast.makeText(context, "" + urlStr + " yay", Toast.LENGTH_SHORT).show();
+            main.couldConnect();
+            //Toast.makeText(context, "" + urlStr + " yay", Toast.LENGTH_SHORT).show();
         }
     }
+
+
+    private void attach(MainActivity main)
+    {
+        this.main = main;
+    }
+
 }
