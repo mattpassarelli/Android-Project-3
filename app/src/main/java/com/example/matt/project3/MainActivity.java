@@ -2,6 +2,7 @@ package com.example.matt.project3;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.webkit.URLUtil;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean network, wifi;
     private SharedPreferences prefs;
     private URL url;
+    private ImageView background;
     private SharedPreferences.OnSharedPreferenceChangeListener listener;
     DownloadJSON down;
     JSONArray jsonArray;
@@ -49,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         doWirelessCheck();
         checkConnections();
 
+        background = (ImageView) findViewById(R.id.picture);
 
         spinner = (Spinner) findViewById(R.id.spinner);
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -95,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                setBackground(spinner.getSelectedItem().toString());
+                downloadImage(spinner.getSelectedItem().toString());
             }
 
             @Override
@@ -106,8 +110,26 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void setBackground(String s) {
-        Toast.makeText(this, "" + s, Toast.LENGTH_SHORT).show();
+    private void downloadImage(String s) {
+        String url = null;
+        switch(s)
+        {
+            case "Horace": url = "http://www.tetonsoftware.com/pets/p3.png";
+                break;
+            case "Crumpet": url = "http://www.tetonsoftware.com/pets/p4.png";
+                break;
+            case "Spot": url = "http://www.tetonsoftware.com/pets/p5.png";
+                break;
+        }
+        DownloadImage down = new DownloadImage(this);
+        down.execute(url);
+
+    }
+
+    public void setBackground(Bitmap bitmap) {
+        //Toast.makeText(this, "setting background", Toast.LENGTH_SHORT).show();
+
+        background.setImageBitmap(bitmap);
     }
 
     private void runDownload() {
