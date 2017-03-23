@@ -33,6 +33,8 @@ class DownloadJSON extends AsyncTask<String, String, String> {
 
         try {
             URL url = new URL(params[0] + "/pets.json");
+            urlStr= url.toString();
+
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
             connection.setRequestMethod("GET");
@@ -70,10 +72,10 @@ class DownloadJSON extends AsyncTask<String, String, String> {
             main.parseJSON(result);
         }
 
-        if(connectionCode == 404)
+        if(connectionCode != 200)
         {
             if (main != null) {
-                main.couldNotConnect(connectionCode);
+                main.couldNotConnect(connectionCode, urlStr);
             }
         }
         else

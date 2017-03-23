@@ -3,6 +3,7 @@ package com.example.matt.project3;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -47,78 +49,83 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setTitle("");
 
-        check = new CheckNetwork(this);
-        doNetworkCheck();
-        doWirelessCheck();
-        checkConnections();
 
         background = (ImageView) findViewById(R.id.picture);
-
         spinner = (Spinner) findViewById(R.id.spinner);
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String temp = prefs.getString("url", null);
+        check = new CheckNetwork(this);
+        doNetworkCheck();
+        doWirelessCheck();
 
-        try {
-            if (temp != null) {
-                url = new URL(prefs.getString("url", getString(R.string.error)));
-            } else {
-                url = new URL("http://www.tetonsoftware.com/pets/");
+        if (checkConnections()) {
+
+            try {
+                if (temp != null) {
+                    url = new URL(prefs.getString("url", getString(R.string.error)));
+                } else {
+                    url = new URL("http://www.tetonsoftware.com/pets/");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        runDownload();
+            runDownload();
 
-        listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-            public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+            listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+                public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
 
-                if (checkConnections()) {
-                    try {
-                        url = new URL(prefs.getString("url", getString(R.string.error)));
-                        runDownload();
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    if (checkConnections()) {
+                        try {
+                            url = new URL(prefs.getString("url", getString(R.string.error)));
+                            runDownload();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+
+                        //Toast.makeText(MainActivity.this, "doing stuff", Toast.LENGTH_SHORT).show();
                     }
 
+                }
+            };
 
-                    //Toast.makeText(MainActivity.this, "doing stuff", Toast.LENGTH_SHORT).show();
+            prefs.registerOnSharedPreferenceChangeListener(listener);
+
+            //Toast.makeText(this, url.toString(), Toast.LENGTH_SHORT).show();
+
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    downloadImage(spinner.getSelectedItem().toString());
+                    ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
+                    ((TextView) parent.getChildAt(0)).setTextSize(18);
+
                 }
 
-            }
-        };
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
 
-        prefs.registerOnSharedPreferenceChangeListener(listener);
-
-        //Toast.makeText(this, url.toString(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.getBackground().setAlpha(APP_BAR_ALPHA);
         setSupportActionBar(toolbar);
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                downloadImage(spinner.getSelectedItem().toString());
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
     }
 
     private void downloadImage(String s) {
         String url = null;
-        switch(s)
-        {
-            case "Horace": url = "http://www.tetonsoftware.com/pets/p3.png";
+        switch (s) {
+            case "Horace":
+                url = "http://www.tetonsoftware.com/pets/p3.png";
                 break;
-            case "Crumpet": url = "http://www.tetonsoftware.com/pets/p4.png";
+            case "Crumpet":
+                url = "http://www.tetonsoftware.com/pets/p4.png";
                 break;
-            case "Spot": url = "http://www.tetonsoftware.com/pets/p5.png";
+            case "Spot":
+                url = "http://www.tetonsoftware.com/pets/p5.png";
                 break;
         }
         DownloadImage down = new DownloadImage(this);
@@ -229,10 +236,10 @@ public class MainActivity extends AppCompatActivity {
         spinner.setAdapter(adapter);
     }
 
-    public void couldNotConnect(int connectionCode) {
+    public void couldNotConnect(int connectionCode, String urlStr) {
         spinner.setEnabled(false);
         spinner.setVisibility(View.INVISIBLE);
-        Toast.makeText(this, "Error when connecting to: " + "\n" + "http://www.pcs.cnu.edu/~kperkins/pets/pets.json" + "\n" + "Error was " + connectionCode, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Error when connecting to: " + "\n" + urlStr + "\n" + "Error was " + connectionCode, Toast.LENGTH_SHORT).show();
 
     }
 
