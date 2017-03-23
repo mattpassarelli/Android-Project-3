@@ -11,11 +11,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.URLUtil;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.MalformedURLException;
@@ -89,6 +91,23 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.getBackground().setAlpha(APP_BAR_ALPHA);
         setSupportActionBar(toolbar);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                setBackground(spinner.getSelectedItem().toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+    }
+
+    private void setBackground(String s) {
+        Toast.makeText(this, "" + s, Toast.LENGTH_SHORT).show();
     }
 
     private void runDownload() {
@@ -147,25 +166,45 @@ public class MainActivity extends AppCompatActivity {
             // you must know what the data format is, a bit brittle
             jsonArray = jsonobject.getJSONArray("pets");
 
-            Toast.makeText(this, "" + jsonArray.get(0).toString(), Toast.LENGTH_SHORT).show();
+           /* Toast.makeText(this, "" + jsonArray.get(0).toString(), Toast.LENGTH_SHORT).show();
             Toast.makeText(this, "" + jsonArray.get(1).toString(), Toast.LENGTH_SHORT).show();
-            Toast.makeText(this, "" + jsonArray.get(2).toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "" + jsonArray.get(2).toString(), Toast.LENGTH_SHORT).show();*/
 
-            List<String> list = new ArrayList<String>();
-
-            for (int i = 0; i < jsonArray.length(); i++) {
-                list.add(jsonArray.getString(i));
-            }
-
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, list);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-            spinner.setAdapter(adapter);
+            setSpinner();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+    }
+
+    private void setSpinner() {
+        List<String> list = new ArrayList<String>();
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            try {
+                list.add(jsonArray.getString(i));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        List<String> names = new ArrayList<String>();
+
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            try {
+                JSONObject object = jsonArray.getJSONObject(i);
+                names.add((String) object.get("name"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, names);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinner.setAdapter(adapter);
     }
 
     public void couldNotConnect(int connectionCode) {
@@ -180,12 +219,7 @@ public class MainActivity extends AppCompatActivity {
         spinner.setVisibility(View.VISIBLE);
     }
 
-    /*public void printTestToast() {
-        Toast.makeText(this, "Test Toast", Toast.LENGTH_SHORT).show();
-    }*/
-
-
-    //TODO: parse JSON
+//
     //TODO: Do stuff with the parsed info (background, etc)
 
 }

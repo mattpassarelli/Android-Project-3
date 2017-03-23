@@ -72,11 +72,15 @@ class DownloadJSON extends AsyncTask<String, String, String> {
 
         if(connectionCode == 404)
         {
-            main.couldNotConnect(connectionCode);
+            if (main != null) {
+                main.couldNotConnect(connectionCode);
+            }
         }
         else
         {
-            main.couldConnect();
+            if (main != null) {
+                main.couldConnect();
+            }
             //Toast.makeText(context, "" + urlStr + " yay", Toast.LENGTH_SHORT).show();
         }
     }
