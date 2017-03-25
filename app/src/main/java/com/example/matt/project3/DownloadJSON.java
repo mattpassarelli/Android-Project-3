@@ -1,29 +1,21 @@
 package com.example.matt.project3;
 
-
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
+
 
 class DownloadJSON extends AsyncTask<String, String, String> {
     private String urlStr;
-    private Context context;
-    private String line;
     private int connectionCode;
     private MainActivity main;
 
 
-    DownloadJSON(Context context, MainActivity main) {
-        this.context = context;
+    DownloadJSON(MainActivity main) {
         attach(main);
     }
 
@@ -44,18 +36,18 @@ class DownloadJSON extends AsyncTask<String, String, String> {
 
                 InputStream input = connection.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-                StringBuffer buffer = new StringBuffer();
+                StringBuilder buffer = new StringBuilder();
 
-                line = "";
+            String line;
 
                 while ((line = reader.readLine()) != null) {
-                    buffer.append(line + "\n");
+                    buffer.append(line).append("\n");
                     Log.d("Response: ", "> " + line);
                 }
 
                 return buffer.toString();
 
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
         return "";

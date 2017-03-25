@@ -1,32 +1,25 @@
 package com.example.matt.project3;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-public class CheckNetwork {
-    Context context;
+class CheckNetwork {
+    private Context context;
 
     CheckNetwork(Context context) {
         this.context = context;
     }
 
-    public boolean isNetworkReachable() {
+    boolean isNetworkReachable() {
         ConnectivityManager mManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo current = mManager.getActiveNetworkInfo();
-        if (current == null) {
-            return false;
-        }
-        return (current.getState() == NetworkInfo.State.CONNECTED);
+        return current != null && (current.getState() == NetworkInfo.State.CONNECTED);
     }
 
-    public boolean isWifiReachable() {
+    boolean isWifiReachable() {
         ConnectivityManager mManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo current = mManager.getActiveNetworkInfo();
-        if (current == null) {
-            return false;
-        }
-        return (current.getType() == ConnectivityManager.TYPE_WIFI);
+        return current != null && (current.getType() == ConnectivityManager.TYPE_WIFI);
     }
 }

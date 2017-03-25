@@ -24,7 +24,6 @@ class DownloadImage extends AsyncTask<String, String, Bitmap> {
     }
 
     private Bitmap downloadImage(String param) {
-
         URL url;
         try {
             url = new URL(param);

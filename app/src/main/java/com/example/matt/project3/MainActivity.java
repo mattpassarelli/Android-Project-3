@@ -8,11 +8,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.URLUtil;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -24,7 +22,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +36,8 @@ public class MainActivity extends AppCompatActivity {
     private URL url;
     private ImageView background;
     private SharedPreferences.OnSharedPreferenceChangeListener listener;
-    DownloadJSON down;
-    JSONArray jsonArray;
+    private DownloadJSON down;
+    private JSONArray jsonArray;
 
 
     @Override
@@ -55,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String temp = prefs.getString("url", null);
         check = new CheckNetwork(this);
+
+
         doNetworkCheck();
         doWirelessCheck();
 
@@ -83,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
-
                         //Toast.makeText(MainActivity.this, "doing stuff", Toast.LENGTH_SHORT).show();
                     }
 
@@ -100,7 +98,6 @@ public class MainActivity extends AppCompatActivity {
                     downloadImage(spinner.getSelectedItem().toString());
                     ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
                     ((TextView) parent.getChildAt(0)).setTextSize(18);
-
                 }
 
                 @Override
@@ -134,17 +131,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setBackground(Bitmap bitmap) {
-        //Toast.makeText(this, "setting background", Toast.LENGTH_SHORT).show();
-
         background.setImageBitmap(bitmap);
     }
 
     private void runDownload() {
-        down = new DownloadJSON(this, this);
+        down = new DownloadJSON(this);
 
-        new DownloadJSON(MainActivity.this, this).execute(url.toString());
+        down.execute(url.toString());
     }
-
 
     private boolean checkConnections() {
         if (!network && !wifi) {
@@ -155,7 +149,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -192,7 +185,6 @@ public class MainActivity extends AppCompatActivity {
         try {
             JSONObject jsonobject = new JSONObject(result);
 
-            // you must know what the data format is, a bit brittle
             jsonArray = jsonobject.getJSONArray("pets");
 
            /* Toast.makeText(this, "" + jsonArray.get(0).toString(), Toast.LENGTH_SHORT).show();
@@ -208,18 +200,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setSpinner() {
-        List<String> list = new ArrayList<String>();
-
-        for (int i = 0; i < jsonArray.length(); i++) {
-            try {
-                list.add(jsonArray.getString(i));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
-        List<String> names = new ArrayList<String>();
-
+        List<String> names = new ArrayList<>();
 
         for (int i = 0; i < jsonArray.length(); i++) {
             try {
@@ -230,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, names);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, names);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinner.setAdapter(adapter);
@@ -247,8 +228,4 @@ public class MainActivity extends AppCompatActivity {
         spinner.setEnabled(true);
         spinner.setVisibility(View.VISIBLE);
     }
-
-//
-    //TODO: Do stuff with the parsed info (background, etc)
-
 }
